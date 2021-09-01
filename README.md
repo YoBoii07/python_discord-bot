@@ -2,7 +2,7 @@
 Discord bot made in python
 
 Features:
-Chat Moderation
+Chat Moderation\n
 Gives a random quote
 Gives a random roast
 Purges chat as necessary
