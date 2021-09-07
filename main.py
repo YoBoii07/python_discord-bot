@@ -64,3 +64,6 @@ async def on_message(message):
 	  await message.channel.send("Woof Woof here's some help\n&quote gives a random quote\n&roast will give a random roast\n&purgechat will delete all messages in a channel\n&purge10 will delete latest 10 messages in the chat\n&purge50 will delete latest 50 messages in the channel\n contact default's papa do enable/disable moderation")
 client.run(os.getenv('TOKEN'))
 keep_alive()
+
+
+#this botbwill be rewritten and old code shall be stored in a side branch
