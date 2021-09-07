@@ -6,10 +6,15 @@ curse_words = [
 'd1ck', 'dildo', 'cnut', 'cock', 'crap', 'cum', 'cox', 'coon', 'sex'
  , 'gay', 'bastard', 'pimp', 'hoe', 'dick', 'choad', 'Twat', 'pussy',  'vagina', 'Vagina', 'porn', 'Porn', 'hoe', 'Hoe', 'slut', 'stud', 'Blowjob','dlck',  'dog-fucker', 'doggin', 'dogging',  'donkeyribber', 'doosh', 'duche', 'dyke', 'ejaculat', 'ejakulate', 'f u c k', 'f u c k e r', 'fuk', 'fuker', 'fuk',  'fux', 'f_u_c_k', 'gangbang',
   ]
+
+final_list =[]
 file = open('swearWords.csv')
 type(file)
 csvreader = csv.reader(file)
 header = next(csvreader)
 file.close()
 for element in header:
- curse_words.append(element)
+ final_list.append(element)
+for each in curse_words:
+ if each not in final_list:
+  final_list.append(each)
