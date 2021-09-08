@@ -11,25 +11,9 @@ I'd recommend mailing me instead of DC because i rarely open it(both tbh)
 
 Discord bot made in python
 
-Features:
-Chat Moderation,
-Gives a random quote,
-Gives a random roast,
-Purges chat as necessary,
-A help command enlightens the lost souls,
+Currently bot is being rewritten,
+Name will be changed from Cheems The Dog to MonkeBot
+New features will be added soon
 
-Libraries:
-
-os, 
-discord, 
-time, 
-berserk, 
-requests, 
-json, 
-random, 
-replit, 
-keep_alive.
-
-Code can be kept alive by running on replit 
-and pinging with uptime bot.
-Currently not functional.
+invite link: (admin perms required)
+https://discord.com/api/oauth2/authorize?client_id=839481185679441940&permissions=8&scope=bot
