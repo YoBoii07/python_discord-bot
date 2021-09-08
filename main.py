@@ -1,66 +1,77 @@
-import os
 import discord
-import time
-import berserk
-import requests
-import json
-import random
-from mylist import roasts
-from mylist import curse_words
-from replit import db
-from keep_alive import keep_alive
 from discord.ext import commands
-from discord.ext.commands import Bot
-client = discord.ext.commands.Bot(command_prefix='&')
-laughlist = ["lmao", "rofl", "XD", "haha", "lol", "looool", "lmaooo"]
-var_moderation = True
-@client.command
-async def kick(ctx, member: discord.Member, *, reason=None):
-	await member.kick(reason=reason)
-	await message.channel.send("kicked {member}".format(message))
-@client.event
-async def on_ready():
-	x = len(curse_words)
-	y = len(roasts)
-	print("bot ready")
-	print("number of curse words: ")
-	print(x)
-	print("number of roasts: ")
-	print(y)
-	await client.change_presence(activity=discord.Game("&help"))
-def get_quote():
-	response = requests.get("https://zenquotes.io/api/random")
-	json_data = json.loads(response.text)
-	quote = json_data[0]['q'] + " -" + json_data[0]['a']
-	return (quote)
-@client.event
-async def on_message(message):
-	if message.author == discord.Client.user:
-		return
-	mention = message.author.mention
-	if any(word in message.content for word in curse_words):
-	  await message.delete()
-	  await message.channel.send("mind your language {0 author.mention}".format(message))
-	if any(laugh in message.content for laugh in laughlist):
-	  await message.channel.send("sun be lomdike ye lmao lol kuchh nhi hota sirf huehuheue hota hai #huehuehuesupremacy")
-	if message.content.startswith('&quote'):
-		quote = get_quote()
-		await message.channel.send(quote)
-	if message.content.startswith('&roast'):
-		await message.channel.send(random.choice(roasts))
-	if message.content.startswith("&purgechat"):
-		await message.channel.purge()
-	if message.content.startswith("&purge10"):
-		await message.channel.purge(limit=10)
-	if message.content.startswith("&purge50"):
-		await message.channel.purge(limit=50)
-	if message.content.startswith("&countto1k"):
-		varx = 1
-		while varx < 1000:
-			await message.channel.send(varx)
-			time.sleep(3)
-			varx += 2
-	if message.content.startswith('&help'):
-	  await message.channel.send("Woof Woof here's some help\n&quote gives a random quote\n&roast will give a random roast\n&purgechat will delete all messages in a channel\n&purge10 will delete latest 10 messages in the chat\n&purge50 will delete latest 50 messages in the channel\n contact default's papa do enable/disable moderation")
-client.run(os.getenv('TOKEN'))
-keep_alive()
+import youtube_dl
+import os
+
+client = commands.Bot(command_prefix="&")
+Client = discord.Client(activity=discord.Game(name='my game'))
+
+# or, for watching:
+activity = discord.Activity(name='my activity', type=discord.ActivityType.watching)
+client = discord.Client(activity=activity)
+
+
+@client.command()
+async def play(ctx, url : str):
+    song_there = os.path.isfile("song.mp3")
+    try:
+        if song_there:
+            os.remove("song.mp3")
+    except PermissionError:
+        await ctx.send("Wait for the current playing music to end or use the 'stop' command")
+        return
+
+    voiceChannel = discord.utils.get(ctx.guild.voice_channels, name='General')
+    await voiceChannel.connect()
+    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])
+    for file in os.listdir("./"):
+        if file.endswith(".mp3"):
+            os.rename(file, "song.mp3")
+    voice.play(discord.FFmpegPCMAudio("song.mp3"))
+
+
+@client.command()
+async def leave(ctx):
+    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    if voice.is_connected():
+        await voice.disconnect()
+    else:
+        await ctx.send("The bot is not connected to a voice channel.")
+
+
+@client.command()
+async def pause(ctx):
+    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    if voice.is_playing():
+        voice.pause()
+    else:
+        await ctx.send("Currently no audio is playing.")
+
+
+@client.command()
+async def resume(ctx):
+    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    if voice.is_paused():
+        voice.resume()
+    else:
+        await ctx.send("The audio is not paused.")
+
+
+@client.command()
+async def stop(ctx):
+    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    voice.stop()
+
+
+client.run('YOUR_TOKEN')
